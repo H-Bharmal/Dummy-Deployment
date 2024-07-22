@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Photo Extractor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Upload a Photo</h1>
+    <form id="uploadForm">
+        <input type="file" id="photo" name="photo" accept="image/*" required>
+        <button type="submit">Upload</button>
+    </form>
+    <pre id="result"></pre>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async function(event) {
+            event.preventDefault();
+
+            const formData = new FormData();
+            const fileInput = document.getElementById('photo');
+            const file = fileInput.files[0];
+            formData.append('photo', file);
+
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                console.log(response);
+                const result = await response.json();
+                console.log(result);
+                document.getElementById('result').textContent = JSON.stringify(result);
+            } catch (error) {
+                console.error('Error uploading photo:', error);
+            }
+        });
+    </script>
+</body>
+</html>
